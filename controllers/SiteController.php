@@ -7,9 +7,9 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
-use app\models\RegistrationForm;
+use app\models\RegisterForm;
 use app\models\User;
-use yii\base\Model;
+//use yii\base\Model;
 
 class SiteController extends Controller
 {
@@ -75,33 +75,49 @@ class SiteController extends Controller
 
     public function actionRegister()
     {
-        $model = new RegistrationForm();
+        $regForm = new RegisterForm();
         $newUser = new User();
-        /*if($model.validate) {
-            $newUser->login = $model->login;
-            $newUser->email = $model->email;
-            $newUser->password = $model->password;
+        /*if($regForm.validate) {
+            $newUser->login = $regForm->login;
+            $newUser->email = $regForm->email;
+            $newUser->password = $regForm->password;
         }*//*
-        $newUser->login = 'fake';//$model->login;
-        $newUser->email = 'email@fake';//$model->email;
-        $newUser->password = 'fake';//$model->password;*/
+        $newUser->login = 'fake';
+        //$regForm->login;
+        $newUser->email = 'email@fake';
+        //$regForm->email;
+        $newUser->password = 'fake';*/
+        //$regForm->password;
+        //var_dump(Yii::$app->request->post()); die();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $newUser->login = $model->login;
-            $newUser->email = $model->email;
-            $newUser->password = $model->password;
+        // collect user input data
+        /*if(isset($_POST['register-form']))
+        {
+            $regForm->attributes=$_POST['register-form'];
+            if ($regForm->validate()) {
+                $newUser->login = $regForm->login;
+                $newUser->email = $regForm->email;
+                $newUser->password = hash_hmac('sha256', $regForm->password, Yii::app()->params['encryptionKey']);
+                if($newUser->save()) {                          
+                    $this->redirect(array('site/index'));
+                }
+            }
+        }*/
+
+        if ($regForm->load(Yii::$app->request->post())) {
+            //$regForm->attributes = $_POST['register-form'];
+            $newUser->login = $regForm->login;
+            $newUser->email = $regForm->email;
+            $newUser->password = $regForm->password;
             $newUser->save();
             return $this->goBack();
         } else {
-            return $this->render('register', ['model' => $model]);
+            return $this->render('register', ['model' => $regForm]);
         }
 
 
-        //$newUser->password = hash_hmac('sha256', $model->password, Yii::app()->params['encryptionKey']);
+        //$newUser->password = hash_hmac('sha256', $regForm->password, Yii::app()->params['encryptionKey']);
 
-        /*if($newUser->save()) {                          
-            $this->redirect(array('site/login'));
-        }*/
         /*$connection = \Yii::$app->db;
         $connection->createCommand()->insert('user', [
             'login' => 'Sam',
@@ -109,42 +125,69 @@ class SiteController extends Controller
             'password' => 'password',
         ])->execute();*/
 
-        /*if ($model->load(Yii::$app->request->post())) {
-            return $this->goBack();
-        } else {
-            return $this->render('register', ['model' => $model]);
-        }*/
-
-
-
-
-        //$model=new RegistrationForm();
-        //$newUser = new User;
-
         // if it is ajax validation request    
         /*if(isset($_POST['ajax']) && $_POST['ajax']==='register-form')
         {
-            echo CActiveForm::validate($model);
+            echo CActiveForm::validate($regForm);
             Yii::app()->end();
         }*/
     
         // collect user input data
         /*if(isset($_POST['register-form']))
         {
-            $model->attributes=$_POST['register-form'];
+            $regForm->attributes=$_POST['register-form'];
             
-            if ($model->validate()) {
-                $newUser->login = $model->login;
-                $newUser->email = $model->email;
-                $newUser->password = hash_hmac('sha256', $model->password, Yii::app()->params['encryptionKey']);
-
+            if ($regForm->validate()) {
+                $newUser->login = $regForm->login;
+                $newUser->email = $regForm->email;
+                $newUser->password = hash_hmac('sha256', $regForm->password, Yii::app()->params['encryptionKey']);
                 if($newUser->save()) {                          
                     $this->redirect(array('site/index'));
                 }
             }
         }*/
         // display the register form
-        //return $this->render('register',array('model'=>$model));
+        //return $this->render('register',array('model'=>$regForm));
+    }
+
+    public function actionUser()
+    {
+        $regForm = new RegisterForm();
+        $newUser = new User();
+        if ($regForm->load(Yii::$app->request->post())) {
+            if(($regForm->login == 'qwerty') && /*($regForm->email == 'qwerty@qw') &&*/ ($regForm->password == 'qwerty')){
+                //$newUser->save();
+                return $this->goBack();
+            }
+            //return $this->goBack();
+        } else {
+            return $this->render('register', ['model' => $regForm]);
+        }
+
+
+
+        /*
+        $model = new User();
+        /*if($model.validate) {
+            $newUser->login = $model->login;
+            $newUser->email = $model->email;
+            $newUser->password = $model->password;
+        }*//*
+        $newUser->login = 'fake';
+        //$model->login;
+        $newUser->email = 'email@fake';
+        //$model->email;
+        $newUser->password = 'fake';*/
+        //$model->password;
+        //var_dump(Yii::$app->request->post()); die();
+
+/*
+        if ($model->load(Yii::$app->request->post())) {
+            $model->save();
+            return $this->goBack();
+        } else {
+            return $this->render('user', ['model' => $model]);
+        }*/
     }
 
 

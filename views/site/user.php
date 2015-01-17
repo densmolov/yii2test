@@ -4,15 +4,15 @@ use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\RegisterForm */
+/* @var $model app\models\User */
 
-$this->title = 'Register';
+$this->title = 'User';
 ?>
-<div class="site-register">
-    <h3>Please register</h3>
+<div class="site-user">
+    <h3>Please User</h3>
 
     <?php $form = ActiveForm::begin([
-        'id' => 'register-form',
+        'id' => 'user-form',
         'options' => ['class' => 'form-horizontal'],
         'fieldConfig' => [
             'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
@@ -23,7 +23,6 @@ $this->title = 'Register';
     <?= $form->field($model, 'login') ?>
     <?= $form->field($model, 'email') ?>
     <?= $form->field($model, 'password')->passwordInput() ?>
-    <?= $form->field($model, 'repeatPassword')->passwordInput() ?>
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">

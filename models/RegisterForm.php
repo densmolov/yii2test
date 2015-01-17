@@ -3,24 +3,17 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Model;
 
 /**
- * This is the model class for table "user".
- *
- * @property integer $id
- * @property string $login
- * @property string $password
- * @property string $email
+ * RegisterForm is the model behind the registration form.
  */
-class User extends \yii\db\ActiveRecord
+class RegisterForm extends Model
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'user';
-    }
+    public $login;
+    public $email;
+    public $password;
+    public $repeatPassword;
 
     /**
      * @return array the validation rules.
@@ -28,20 +21,22 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            // login and password are both required
+            //[['login', 'password'], 'required'],
             [['login', 'password', 'email'], 'required'],
-            [['login', 'password', 'email'], 'string', 'max' => 255]
             // password is validated by validatePassword()
-            //['password', 'validatePassword'],
+            //'password', 'validatePassword'],
         ];
     }
-    
+
     /**
      * Validates the password.
+     * This method serves as the inline validation for password.
      *
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
+    /*public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -49,21 +44,17 @@ class User extends \yii\db\ActiveRecord
                 $this->addError($attribute, 'Incorrect username or password.');
             }
         }
+    }*/
+
+    /** * Declares attribute labels. */ 
+    public function attributeLabels() { 
+        return array( 
+            'login'=>'login', 
+            'email'=>'email', 
+            'password'=>'password',
+            'repeatPassword'=>'repeat password:'
+        );
     }
 
-
-
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'id:',
-            'login' => 'login:',
-            'password' => 'password:',
-            'email' => 'email:',
-        ];
-    }
+    
 }
