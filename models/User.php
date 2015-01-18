@@ -28,10 +28,11 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['login', 'password', 'email'], 'required'],
-            [['login', 'password', 'email'], 'string', 'max' => 255]
+            [['login', 'email', 'password'], 'required'],
+            [['login', 'email', 'password'], 'string', 'max' => 255, 'min' => 3],
+            ['email','email'],
             // password is validated by validatePassword()
-            //['password', 'validatePassword'],
+            ['password', 'validatePassword'],
         ];
     }
     
@@ -41,7 +42,7 @@ class User extends \yii\db\ActiveRecord
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
+    public function validatePassword($attribute/*, $params*/)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -51,8 +52,37 @@ class User extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Finds user by login
+     *
+     * @param  string $login
+     * @return static|null
+     */
+    public static function findByLogin($login)
+    {
+        // the following will retrieve the user from the database
+        $user = User::find()->where(['login' => $login])->one();
+        /*foreach (self::$users as $user) {
+            if (strcasecmp($user['login'], $login) === 0) {
+                return new static($user);
+            }
+        }
+        return null;*/
+        return $user;
+    }
 
-
+    /**
+     * Finds user by [[login]]
+     *
+     * @return User|null
+     */
+    public function getUser()
+    {
+        if ($this->_user === false) {
+            $this->_user = User::findByLogin($this->login);
+        }
+        return $this->_user;
+    }
 
     /**
      * @inheritdoc

@@ -22,7 +22,6 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // login and password are both required
             [['login', 'password'], 'required'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
@@ -64,13 +63,13 @@ class LoginForm extends Model
      *
      * @return User|null
      */
-    public function getUser()
+    /*public function getUser()
     {
         if ($this->_user === false) {
             $this->_user = User::findByLogin($this->login);
         }
         return $this->_user;
-    }
+    }*/
 
     /** * Declares attribute labels. */ 
     public function attributeLabels() { 

@@ -21,9 +21,9 @@ class RegisterForm extends Model
     public function rules()
     {
         return [
-            // login and password are both required
-            //[['login', 'password'], 'required'],
-            [['login', 'password', 'email'], 'required'],
+            [['login', 'email', 'password', 'repeatPassword'], 'required'],
+            [['login', 'email', 'password', 'repeatPassword'], 'string', 'max' => 255, 'min' => 3],
+            ['email','email']
             // password is validated by validatePassword()
             //'password', 'validatePassword'],
         ];
