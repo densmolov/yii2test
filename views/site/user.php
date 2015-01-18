@@ -16,5 +16,6 @@ echo GridView::widget([
         'email',
     ],
 ]);
+?>
 
 </div>

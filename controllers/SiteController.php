@@ -9,7 +9,6 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\RegisterForm;
 use app\models\User;
-//use yii\grid\GridView;
 use yii\data\ActiveDataProvider;
 
 class SiteController extends Controller
@@ -122,17 +121,6 @@ class SiteController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => User::find()->select(['login', 'email'])->orderBy('LOWER(login)'),
         ]);
-        /*echo GridView::widget([
-            'dataProvider' => $dataProvider,
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
-                // Simple columns defined by the data contained in $dataProvider.
-                // Data from the model's column will be used.
-                'login',
-                'email',
-            ],
-        ]);*/
-        $users = $dataProvider->getModels();
         return $this->render('user', ['dataProvider' => $dataProvider]);
     }
 
