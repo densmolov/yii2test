@@ -1,18 +1,20 @@
 <?php
-
 use yii\grid\GridView;
-use yii\data\ActiveDataProvider;
 
-
+$this->title = 'All users';
+?>
 <div class="site-user">
-    <h3>Please User</h3>
 
-$dataProvider = new ActiveDataProvider([
-    'query' => Post::find(),
-]);
-
+<?php
 echo GridView::widget([
     'dataProvider' => $dataProvider,
+    'columns' => [
+        ['class' => 'yii\grid\SerialColumn'],
+        // Simple columns defined by the data contained in $dataProvider.
+        // Data from the model's column will be used.
+        'login',
+        'email',
+    ],
 ]);
 
 </div>
