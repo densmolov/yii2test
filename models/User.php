@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $login
- * @property string $password
+ * @property string $passwordHash
  * @property string $email
  */
 class User extends \yii\db\ActiveRecord
@@ -25,19 +25,20 @@ class User extends \yii\db\ActiveRecord
     /**
      * @return array the validation rules.
      */
+    //  DO WE NEED THIS?!   ////////////////////////////////////////////////////////////////
     public function rules()
     {
         return [
-            [['login', 'email', 'password'], 'required'],
-            [['login', 'email', 'password'], 'string', 'max' => 255, 'min' => 3],
+            [['login', 'email', 'passwordHash'], 'required'],
+            [['login', 'email', 'passwordHash'], 'string', 'max' => 255, 'min' => 3],
             ['email','email'],
-            // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            // passwordHash is validated by validatePassword()
+            //['passwordHash', 'validatePassword'],
         ];
     }
     
     /**
-     * Validates the password.
+     * Validates the passwordHash.
      *
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
@@ -46,7 +47,7 @@ class User extends \yii\db\ActiveRecord
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
+            if (!$user || !$user->validatePassword($this->passwordHash)) {
                 $this->addError($attribute, 'Incorrect username or password.');
             }
         }
@@ -76,13 +77,13 @@ class User extends \yii\db\ActiveRecord
      *
      * @return User|null
      */
-    public function getUser()
+    /*public function getUser()
     {
         if ($this->_user === false) {
             $this->_user = User::findByLogin($this->login);
         }
         return $this->_user;
-    }
+    }*/
 
     /**
      * @inheritdoc
@@ -92,7 +93,7 @@ class User extends \yii\db\ActiveRecord
         return [
             'id' => 'id:',
             'login' => 'login:',
-            'password' => 'password:',
+            'passwordHash' => 'password:',
             'email' => 'email:',
         ];
     }

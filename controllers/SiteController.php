@@ -76,22 +76,43 @@ class SiteController extends Controller
     {
         $regForm = new RegisterForm();
         $newUser = new User();
+        $noSuchLoginYet = true;
         if ($regForm->load(Yii::$app->request->post())) {
-            $newUser->login = $regForm->login;
-            $newUser->email = $regForm->email;
-            $newUser->password = Yii::$app->getSecurity()->generatePasswordHash($regForm->password);
+            //  try catch ?   ////////////////////////////////////////////////////////////
+            $allUsersFromDB = User::find()
+                ->select('login')
+                ->all();
+            foreach ($allUsersFromDB as $value) {
+                if($regForm->login == $value->login) {
+                    $noSuchLoginYet = false;
+                }
+            }
+            if(($noSuchLoginYet) && ($regForm->password == $regForm->repeatPassword)) {
+                $newUser->login = $regForm->login;
+                $newUser->email = $regForm->email;
+                $newUser->passwordHash = Yii::$app->getSecurity()->generatePasswordHash($regForm->password);
+                $newUser->save();
+                return $this->goBack();
+                //  TO DO: MY TASK
+                //return $this->render('login', ['model' => new LoginForm()]);
+            }
+            return $this->render('register', ['model' => $regForm]);
             //  PASSWORD ENCRYPTOR WORKS BOTH DIRECTIONS !!!
-            /*if(Yii::$app->getSecurity()->validatePassword('qwerty', $newUser->password)) {
+            /*if(Yii::$app->getSecurity()->validatePassword('qwerty', $newUser->passwordHash)) {
                 $newUser->save();
                 return $this->goBack();
             }*/
-            if($newUser->save()){
-                return $this->goBack();
-            }
         } else {
             return $this->render('register', ['model' => $regForm]);
         }
+    }
 
+    public function actionUser()
+    {
+        $allUsersFromDB = User::find()
+            ->orderBy('login')
+            ->all();
+        return $this->render('register', ['model' => new User()]);
     }
 
 }
