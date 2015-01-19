@@ -23,16 +23,15 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return array the validation rules.
      */
-    //  DO WE NEED THIS?!   ////////////////////////////////////////////////////////////////
     public function rules()
     {
-        return [//????????????????????????????????????????????????
+        return [
             [['login', 'email', 'passwordHash'], 'required'],
             [['login', 'email', 'passwordHash'], 'string', 'max' => 255, 'min' => 3],
             ['login', 'unique'],
             ['email','email'],
             // passwordHash is validated by validatePassword()
-            //['passwordHash', 'validatePassword'],
+            ['passwordHash', 'validatePassword'],
         ];
     }
 

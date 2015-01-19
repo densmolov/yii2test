@@ -78,15 +78,17 @@ class SiteController extends Controller
         $newUser = new User();
         $noSuchLoginYet = true;
         if ($regForm->load(Yii::$app->request->post())) {
+            $strippedLogin = strip_tags($regForm->login);
+            $strippedEmail = strip_tags($regForm->email);
             //  try catch ?   ////////////////////////////////////////////////////////////
             // flash this error!
             //  Check if this login already exists:
-            if(User::find()->where(['login' => $regForm->login])->count() > 0) {
+            if(User::find()->where(['login' => $strippedLogin])->count() > 0) {
                 $noSuchLoginYet = false;
             }
             if(($noSuchLoginYet) && (strcasecmp($regForm->password, $regForm->repeatPassword) === 0)) {
-                $newUser->login = $regForm->login;
-                $newUser->email = $regForm->email;
+                $newUser->login = $strippedLogin;
+                $newUser->email = $strippedEmail;
                 $newUser->passwordHash = Yii::$app->getSecurity()->generatePasswordHash($regForm->password);
                 $newUser->save();
                 return $this->redirect(['login']);
