@@ -79,13 +79,10 @@ class SiteController extends Controller
         $noSuchLoginYet = true;
         if ($regForm->load(Yii::$app->request->post())) {
             //  try catch ?   ////////////////////////////////////////////////////////////
-            $allUsersFromDB = User::find()
-                ->select('login')
-                ->all();
-            foreach ($allUsersFromDB as $foundUser) {
-                if($regForm->login == $foundUser->login) {
-                    $noSuchLoginYet = false;
-                }
+            // flash this error!
+            //  Check if this login already exists:
+            if(User::find()->where(['login' => $regForm->login])->count() > 0) {
+                $noSuchLoginYet = false;
             }
             if(($noSuchLoginYet) && (strcasecmp($regForm->password, $regForm->repeatPassword) === 0)) {
                 $newUser->login = $regForm->login;

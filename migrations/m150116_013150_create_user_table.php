@@ -14,7 +14,7 @@ class m150116_013150_create_user_table extends Migration
 
         $this->createTable('{{%user}}', [
             'id' => Schema::TYPE_PK,
-            'login' => Schema::TYPE_STRING . ' NOT NULL',
+            'login' => Schema::TYPE_STRING . ' NOT NULL' . ' UNIQUE',
             'passwordHash' => Schema::TYPE_STRING . ' NOT NULL',
             'email' => Schema::TYPE_STRING . ' NOT NULL',
         ], $tableOptions);

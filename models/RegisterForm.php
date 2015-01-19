@@ -23,6 +23,7 @@ class RegisterForm extends Model
         return [
             [['login', 'email', 'password', 'repeatPassword'], 'required'],
             [['login', 'email', 'password', 'repeatPassword'], 'string', 'max' => 255, 'min' => 3],
+            ['login', 'unique'],
             ['email','email']
             // password is validated by validatePassword()
             //'password', 'validatePassword'],

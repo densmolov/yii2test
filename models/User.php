@@ -29,6 +29,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [//????????????????????????????????????????????????
             [['login', 'email', 'passwordHash'], 'required'],
             [['login', 'email', 'passwordHash'], 'string', 'max' => 255, 'min' => 3],
+            ['login', 'unique'],
             ['email','email'],
             // passwordHash is validated by validatePassword()
             //['passwordHash', 'validatePassword'],
