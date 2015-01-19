@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use Yii;
+
 /**
  * This is the model class for table "user".
  *
@@ -36,10 +38,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @inheritdoc
      */
-    public static function findIdentity2222222222($id)
-    {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
-    }
     public static function findIdentity($id)
     {
         return static::findOne($id);
@@ -94,8 +92,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      * @param  string  $passwordHash passwordHash to validate
      * @return boolean if passwordHash provided is valid for current user
      */
-    public function validatePassword($passwordHash)
+    public function validatePassword($password)
     {
-        return $this->passwordHash === $passwordHash;
+        return Yii::$app->getSecurity()->validatePassword($password, $this->passwordHash);
     }
 }

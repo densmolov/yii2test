@@ -53,7 +53,6 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            //return Yii::$app->user->login($this->getUser());
             return Yii::$app->user->login($this->getUser(), 3600*24*30);
         } else {
             return false;
@@ -62,7 +61,6 @@ class LoginForm extends Model
 
     /**
      * Finds user by [[login]]
-     *
      * @return User|null
      */
     public function getUser()
@@ -72,4 +70,5 @@ class LoginForm extends Model
         }
         return $this->_user;
     }
+    
 }

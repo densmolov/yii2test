@@ -18,10 +18,9 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout', 'user'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -61,24 +60,16 @@ class SiteController extends Controller
         }
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->actionUser();
+            return $this->redirect(['user']);
         } else {
             return $this->render('login', ['model' => $model]);
         }
     }
 
-    public function actionUser()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => User::find()->select(['login', 'email'])->orderBy('LOWER(login)'),
-        ]);
-        return $this->render('user', ['dataProvider' => $dataProvider]);
-    }
-
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->goHome();
+        return $this->redirect(['login']);
     }
 
     public function actionRegister()
@@ -91,34 +82,31 @@ class SiteController extends Controller
             $allUsersFromDB = User::find()
                 ->select('login')
                 ->all();
-            foreach ($allUsersFromDB as $value) {
-                if($regForm->login == $value->login) {
+            foreach ($allUsersFromDB as $foundUser) {
+                if($regForm->login == $foundUser->login) {
                     $noSuchLoginYet = false;
                 }
             }
             if(($noSuchLoginYet) && (strcasecmp($regForm->password, $regForm->repeatPassword) === 0)) {
                 $newUser->login = $regForm->login;
                 $newUser->email = $regForm->email;
-                $newUser->passwordHash = $regForm->password;
-                //$newUser->passwordHash = Yii::$app->getSecurity()->generatePasswordHash($regForm->password);
+                $newUser->passwordHash = Yii::$app->getSecurity()->generatePasswordHash($regForm->password);
                 $newUser->save();
-                //return $this->goBack();
-                //  TO DO: MY TASK
-                //return $this->render('login', ['model' => new LoginForm()]);
-                //return $this->actionLogin();
-                //return $this->render('login', ['model' => new LoginForm()]);
                 return $this->redirect(['login']);
             } else {
                 return $this->render('register', ['model' => $regForm]);
             }
-            //  PASSWORD ENCRYPTOR WORKS BOTH DIRECTIONS !!!
-            /*if(Yii::$app->getSecurity()->validatePassword('qwerty', $newUser->passwordHash)) {
-                $newUser->save();
-                return $this->goBack();
-            }*/
         } else {
             return $this->render('register', ['model' => $regForm]);////////////////////////////////?????????????????
         }
-    }    
+    }
+
+    public function actionUser()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => User::find()->select(['login', 'email'])->orderBy('LOWER(login)'),
+        ]);
+        return $this->render('user', ['dataProvider' => $dataProvider]);
+    }
 
 }
