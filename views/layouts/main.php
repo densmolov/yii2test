@@ -35,13 +35,14 @@ AppAsset::register($this);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Register', 'url' => ['/site/register']],
-                    ['label' => 'Users', 'url' => ['/site/user']],
+                    Yii::$app->user->isGuest ?
+                        ['label' => 'Register', 'url' => ['/site/register']] : 
+                            ['label' => 'Users', 'url' => ['/site/user']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Login', 'url' => ['/site/login']] :
-                        ['label' => 'Logout (' . Yii::$app->user->identity->login . ')',
-                            'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']],
+                            ['label' => 'Logout (' . Yii::$app->user->identity->login . ')',
+                                'url' => ['/site/logout'],
+                                'linkOptions' => ['data-method' => 'post']]                    
                 ],
             ]);
             NavBar::end();
@@ -54,9 +55,6 @@ AppAsset::register($this);
             <?= $content ?>
         </div>
     </div>
-
-    <footer class="footer">
-    </footer>
 
 <?php $this->endBody() ?>
 </body>

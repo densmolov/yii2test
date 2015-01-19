@@ -61,10 +61,18 @@ class SiteController extends Controller
         }
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->actionUser();
         } else {
             return $this->render('login', ['model' => $model]);
         }
+    }
+
+    public function actionUser()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => User::find()->select(['login', 'email'])->orderBy('LOWER(login)'),
+        ]);
+        return $this->render('user', ['dataProvider' => $dataProvider]);
     }
 
     public function actionLogout()
@@ -88,40 +96,29 @@ class SiteController extends Controller
                     $noSuchLoginYet = false;
                 }
             }
-            if(($noSuchLoginYet) && ($regForm->password == $regForm->repeatPassword)) {
+            if(($noSuchLoginYet) && (strcasecmp($regForm->password, $regForm->repeatPassword) === 0)) {
                 $newUser->login = $regForm->login;
                 $newUser->email = $regForm->email;
-                $newUser->passwordHash = Yii::$app->getSecurity()->generatePasswordHash($regForm->password);
+                $newUser->passwordHash = $regForm->password;
+                //$newUser->passwordHash = Yii::$app->getSecurity()->generatePasswordHash($regForm->password);
                 $newUser->save();
-                return $this->goBack();
+                //return $this->goBack();
                 //  TO DO: MY TASK
                 //return $this->render('login', ['model' => new LoginForm()]);
+                //return $this->actionLogin();
+                //return $this->render('login', ['model' => new LoginForm()]);
+                return $this->redirect(['login']);
+            } else {
+                return $this->render('register', ['model' => $regForm]);
             }
-            return $this->render('register', ['model' => $regForm]);
             //  PASSWORD ENCRYPTOR WORKS BOTH DIRECTIONS !!!
             /*if(Yii::$app->getSecurity()->validatePassword('qwerty', $newUser->passwordHash)) {
                 $newUser->save();
                 return $this->goBack();
             }*/
         } else {
-            return $this->render('register', ['model' => $regForm]);
+            return $this->render('register', ['model' => $regForm]);////////////////////////////////?????????????????
         }
-    }
-
-    public function actionUser222()
-    {
-        $allUsersFromDB = User::find()
-            ->orderBy('login')
-            ->all();
-        return $this->render('user', ['model' => new User()]);
-    }
-
-    public function actionUser()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => User::find()->select(['login', 'email'])->orderBy('LOWER(login)'),
-        ]);
-        return $this->render('user', ['dataProvider' => $dataProvider]);
-    }
+    }    
 
 }

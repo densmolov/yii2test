@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-
 /**
  * This is the model class for table "user".
  *
@@ -12,11 +10,9 @@ use Yii;
  * @property string $passwordHash
  * @property string $email
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
-    /**
-     * @inheritdoc
-     */
+
     public static function tableName()
     {
         return 'user';
@@ -28,7 +24,7 @@ class User extends \yii\db\ActiveRecord
     //  DO WE NEED THIS?!   ////////////////////////////////////////////////////////////////
     public function rules()
     {
-        return [
+        return [//????????????????????????????????????????????????
             [['login', 'email', 'passwordHash'], 'required'],
             [['login', 'email', 'passwordHash'], 'string', 'max' => 255, 'min' => 3],
             ['email','email'],
@@ -36,65 +32,70 @@ class User extends \yii\db\ActiveRecord
             //['passwordHash', 'validatePassword'],
         ];
     }
-    
+
     /**
-     * Validates the passwordHash.
-     *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
+     * @inheritdoc
      */
-    public function validatePassword($attribute/*, $params*/)
+    public static function findIdentity2222222222($id)
     {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->passwordHash)) {
-                $this->addError($attribute, 'Incorrect username or password.');
-            }
-        }
+        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+    }
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
     }
 
     /**
      * Finds user by login
      *
-     * @param  string $login
+     * @param  string      $login
      * @return static|null
      */
     public static function findByLogin($login)
     {
-        // the following will retrieve the user from the database
-        $user = User::find()->where(['login' => $login])->one();
-        /*foreach (self::$users as $user) {
-            if (strcasecmp($user['login'], $login) === 0) {
-                return new static($user);
-            }
+        if ($user = User::find()->where(['login' => $login])->one()) {
+            return new static($user);
         }
-        return null;*/
-        return $user;
+        return null;
     }
-
-    /**
-     * Finds user by [[login]]
-     *
-     * @return User|null
-     */
-    /*public function getUser()
-    {
-        if ($this->_user === false) {
-            $this->_user = User::findByLogin($this->login);
-        }
-        return $this->_user;
-    }*/
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function getId()
     {
-        return [
-            'id' => 'id:',
-            'login' => 'login:',
-            'passwordHash' => 'password:',
-            'email' => 'email:',
-        ];
+        return $this->id;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
+    {
+    }
+
+    /**
+     * Validates passwordHash
+     *
+     * @param  string  $passwordHash passwordHash to validate
+     * @return boolean if passwordHash provided is valid for current user
+     */
+    public function validatePassword($passwordHash)
+    {
+        return $this->passwordHash === $passwordHash;
     }
 }

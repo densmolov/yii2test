@@ -15,17 +15,15 @@ class LoginForm extends Model
 
     private $_user = false;
 
-
     /**
      * @return array the validation rules.
      */
     public function rules()
     {
         return [
-            // username and password are both required
             [['login', 'password'], 'required'],
             // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            //['password', 'validatePassword'],
         ];
     }
 
@@ -53,8 +51,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            //return Yii::$app->user->login($this->getUser());
-            return Yii::$app->user->login($this->getUser(), 3600*24*30);
+            return Yii::$app->user->login($this->getUser());
         } else {
             return false;
         }
@@ -70,6 +67,19 @@ class LoginForm extends Model
         if ($this->_user === false) {
             $this->_user = User::findByLogin($this->login);
         }
+        /**/
+        //$ogogo = User::findByLogin(/*$this->login*/'register');
+        //return $ogogo;
+        /**/
         return $this->_user;
     }
+
+    /** * Declares attribute labels. */ 
+    public function attributeLabels() { 
+        return array( 
+            'login'=>'login:', 
+            'password'=>'password:',
+        );
+    }
+    
 }
