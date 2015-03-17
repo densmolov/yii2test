@@ -1,89 +1,12 @@
-Yii 2 Basic Application Template
-================================
+Необходимо разработать базу данных и набор вебстраниц, выполняющих следующие функции:
 
-Yii 2 Basic Application Template is a skeleton Yii 2 application best for
-rapidly creating small projects.
+1) Регистрация.
+Для регистрации необходимо чтобы пользователь заполнил следующие поля: логин, емайл, пароль, повтор пароля. Все поля не должны быть пустыми. Пароль и повтор пароля должны совпадать. Имя и пароль должны быть чувствительны к регистру. Пароль не может быть прочтен при наборе. Имя пользователя и пароль должны быть минимум в 3 символа длиной. Данные должны быть сохранены в базу данных. База не должна содержать одинаковых имен пользователей. В случае неверного вода данных регистрация не должна происходить и пользователь должен быть извещен об этом (извещение должно быть осмысленным, соответствующим ошибке и его текст, не должен передаваться в урле). В случае успешной регистрации пользователь должен быть переведен на страницу логина с сообщением об успешной регистрации. Пароль пользователя не должен сохранятся в базе данных в открытом виде, необходимо сохранять его хеш (к примеру md5).
 
-The template contains the basic features including user login/logout and a contact page.
-It includes all commonly used configurations that would allow you to focus on adding new
-features to your application.
+2) Логин.
+Страница логина содержит следующие поля: логин, пароль. Имя и пароль должны быть чувствительны к регистру. Пароль не может быть прочтен при наборе. При успешном логине (логин имеется в базе, пароль верный) пользователь переводится на страницу со списком зарегистрированных пользователей. При неудачно логине остается на странице логина, при этом должно выводиться соответствующее сообщение (сообщение об ошибке обязательно).
 
+3) Список пользователей. 
+Список пользователей доступен только залогиненому пользователю. Список пользователей содержит 2 колонки. 1 – логин, 2 - емайл. Список выводится упорядоченный по логину в алфавитном порядке. Поле логин содержит логины пользователей, поле емайл содержит емайлы пользователей (как ссылки). 
 
-DIRECTORY STRUCTURE
--------------------
-
-      assets/             contains assets definition
-      commands/           contains console commands (controllers)
-      config/             contains application configurations
-      controllers/        contains Web controller classes
-      mail/               contains view files for e-mails
-      models/             contains model classes
-      runtime/            contains files generated during runtime
-      tests/              contains various tests for the basic application
-      vendor/             contains dependent 3rd-party packages
-      views/              contains view files for the Web application
-      web/                contains the entry script and Web resources
-
-
-
-REQUIREMENTS
-------------
-
-The minimum requirement by this application template that your Web server supports PHP 5.4.0.
-
-
-INSTALLATION
-------------
-
-### Install from an Archive File
-
-Extract the archive file downloaded from [yiiframework.com](http://www.yiiframework.com/download/) to
-a directory named `basic` that is directly under the Web root.
-
-You can then access the application through the following URL:
-
-~~~
-http://localhost/basic/web/
-~~~
-
-
-### Install via Composer
-
-If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
-at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
-
-You can then install this application template using the following command:
-
-~~~
-php composer.phar global require "fxp/composer-asset-plugin:1.0.0-beta4"
-php composer.phar create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic basic
-~~~
-
-Now you should be able to access the application through the following URL, assuming `basic` is the directory
-directly under the Web root.
-
-~~~
-http://localhost/basic/web/
-~~~
-
-
-CONFIGURATION
--------------
-
-### Database
-
-Edit the file `config/db.php` with real data, for example:
-
-```php
-return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-    'username' => 'root',
-    'password' => '1234',
-    'charset' => 'utf8',
-];
-```
-
-**NOTE:** Yii won't create the database for you, this has to be done manually before you can access it.
-
-Also check and edit the other files in the `config/` directory to customize your application.
+Так же на странице имеется ссылка «выйти». Данная ссылка переводит пользователя на страницу логина. Список пользователей становится недоступным до следующего успешного логина.
